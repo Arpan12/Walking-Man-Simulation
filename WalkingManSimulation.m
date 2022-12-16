@@ -21,6 +21,7 @@ y_com_vel=0;
 cop_idx=1;
 xcop_prev=0;
 xcop=0;
+left=1;
 % xcop=K(cop_idx).value*[xcom_prev;x_com_vel]+k(cop_idx).value;
 for h = 1:horizon_len*1000
     
@@ -28,7 +29,7 @@ for h = 1:horizon_len*1000
         xcop_prev = xcop;
         xcop = K(cop_idx).value*[xcom_prev;x_com_vel]+k(cop_idx).value;
         cop_idx = cop_idx+1;
-         
+        left = mod(left+1,2); 
     end
     %cop_idx = h;
     %xcop=0;
@@ -49,8 +50,13 @@ for h = 1:horizon_len*1000
     %COM
     %P = line([sin(theta) sin(theta)], [cos(theta) cos(theta)]);
     %O_circ = viscircles([0 0],0.01);
-    leg1 = line([xcop x_com_curr],[0 y_com_curr]);
+    if(left)
+    leg1 = line([xcop x_com_curr],[0 y_com_curr],'Color','red');
     leg2 = line([xcop_prev x_com_curr],[0 y_com_curr]);
+    else
+    leg1 = line([xcop x_com_curr],[0 y_com_curr]);
+    leg2 = line([xcop_prev x_com_curr],[0 y_com_curr],'Color','red');
+    end
    % leg = line([0 x_com_curr],[0 y_com_curr]);
     xcom_prev=x_com_curr;
     ycom_prev = y_com_curr;
