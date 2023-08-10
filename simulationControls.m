@@ -3,7 +3,7 @@ close all;
 clc;
 fclose all;
 bdclose all;
-
+desired_state=0;
 % cost function
 Q = [100,0;0,5];
 R = 0.5;
@@ -17,9 +17,24 @@ K= struct;
 k = struct;
 P_next = Q;
 p_next = -Q*[10;0];
-horizon_len = floor(10/del_t);
+horizon_len = floor(12/del_t);
+der_state_array =zeros(horizon_len,2);
+
+for i = 1:horizon_len
+del_t = 0.5;
+%global desired_state;
+r = randi([4 6],1);
+v = r/10;
+desired_state = desired_state+v*del_t;
+der_state_array(i,:) = [desired_state;0]; 
+
+end
+
+
 for n = horizon_len:-1:1
-qn = -Q*state_der(n);
+
+
+qn = -Q*der_state_array(n,:)';%state_der(desired_state,n);
 Kn = -inv(R + B'*P_next*B)*B'*P_next*A;
 Pn = Q + A'*P_next*A + A'*P_next*B*Kn;
 kn = -inv(R + B'*P_next*B)*B'*p_next;
@@ -45,15 +60,21 @@ end
 WalkingManSimulation(K,k,del_t)
 
 
-function z = state_der(timestep)
-del_t = 0.5;
 
-if(timestep<(10/del_t))
-z = [timestep*del_t*0.4;0];
-else
-z = [4;0];
-end
-end
+% function z = state_der(desired_state,timestep)
+% del_t = 0.5;
+% %global desired_state;
+% r = randi([4 6],1);
+% v = r/10;
+% desired_state = desired_state+v*del_t;
+% if(timestep<(10/del_t))
+% %z = [timestep*del_t*v;0];
+% %desired_state = desired_state+v*del_t;
+% z = [desired_state;0];
+% else
+% z = [desired_state;0];
+% end
+% end
 
 
 

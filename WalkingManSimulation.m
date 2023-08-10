@@ -41,12 +41,12 @@ for h = 1:horizon_len*1000
     x_com_acc = ang_acc*cos(theta);
     x_com_vel = x_com_vel + x_com_acc*del_t;
     x_com_curr = xcom_prev+x_com_vel*del_t+0.5*x_com_acc*(del_t^2);
-
-%     y_com_acc = -ang_acc*sin(theta);
+    step_size=x_com_curr-xcop;
+%     y_com_acc = ang_acc*sin(theta);
 %     y_com_vel = y_com_vel + y_com_acc*del_t;
-%     y_com_curr = ycom_prev+y_com_vel*del_t+0.5*y_com_acc*(del_t^2);
-%     
-    y_com_curr = ycom_prev;
+    y_com_curr = abs(sqrt(1-step_size*step_size));%ycom_prev+y_com_vel*del_t+0.5*y_com_acc*(del_t^2);
+    
+%    y_com_curr = ycom_prev;
     %COM
     %P = line([sin(theta) sin(theta)], [cos(theta) cos(theta)]);
     %O_circ = viscircles([0 0],0.01);
